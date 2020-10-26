@@ -1,0 +1,27 @@
+config:
+  target: "http://127.0.0.1:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 1
+      rampTo: 2
+      name: Nice and warm
+    - duration: 25
+      arrivalRate: 2
+      rampTo: 5
+      name: Thats hot!
+  http:
+    pool: 10
+  payload:
+    # Load search keywords from an external CSV file and make them available
+    # to virtual user scenarios as variable "keywords":
+    path: "productIds.csv"
+    fields:
+      - "productIds"
+scenarios:
+  # We define one scenario:
+  - name: "Get recommended products"
+    flow:
+      - loop:
+        - get:
+            url: "/{{ productIds }}"
+        count: 300
